@@ -72,11 +72,23 @@ app.post('/api/login', async (req, res) => {
     return false;
   }
 
-  const token = jwt.sign({ email, role: 'admin' }, secret, {expiresIn: '1h'});
+  //  สร้าง token
+  // const token = jwt.sign({ email, role: 'admin' }, secret, {expiresIn: '1h'});
+  //  ส่วน cookie
+  // res.cookie('token', token, {  
+  //   maxAge: 300000,
+  //   secure: true,
+  //   httpOnly: true,
+  //   sameSite: 'None'
   
+  // });
+  
+  req.session.userId = userData.id;
+  req.session.user = userData;
+
   res.json({
     message: 'login success',
-    token
+    // token
   })
 } catch (error) {
   console.log('error', error)
@@ -86,19 +98,29 @@ app.post('/api/login', async (req, res) => {
 
 app.get('/api/users', async (req, res) => {
   try{
-    const authHeader = req.headers['authorization'];
-    let authToken = '';
-    if (authHeader) {
-      authToken = authHeader.split(' ')[1];
-    }
-    console.log('authToken', authToken)
-    const user = jwt.verify(authToken, secret);
-    console.log('user', user)
+    // ส่วน cookie
+    // const authToken = req.cookies.token;
 
-    const [checkResults] = await conn.query('SELECT * FROM users WHERE email = ?', [user.email]);
-    if (!checkResults[0]) {
-      throw {message: 'user not found'}
+    // ส่วน token
+    // const authHeader = req.headers['authorization'];
+    // let authToken = '';
+    // if (authHeader) {
+    //   authToken = authHeader.split(' ')[1];
+    //}
+    // console.log('authToken', authToken)
+    // const user = jwt.verify(authToken, secret);
+    // console.log('user', user)
+
+    if (!req.session.userId) {
+      throw {message: 'Auth fail'}
     }
+    console.log('req.session', req.session)
+    console.log(req.sessionID)
+
+    // const [checkResults] = await conn.query('SELECT * FROM users WHERE email = ?', [user.email]);
+    // if (!checkResults[0]) {
+    //   throw {message: 'user not found'}
+    // }
 
     const [results] = await conn.query('SELECT * FROM users');
     res.json({ 

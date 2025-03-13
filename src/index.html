@@ -24,20 +24,24 @@
                email,
                password
 
+           }, {
+               withCredentials: true
            })
-           localStorage.setItem('token', response.data.token)
-           console.log(response.data.token)
+           console.log(response.data)
+        //    localStorage.setItem('token', response.data.token)
+        //    console.log(response.data.token)
             }catch (error) {
                 console.log(error);
             }
         }
         const getusers = async() => {
             try {
-                const authToken = localStorage.getItem('token')
+                // const authToken = localStorage.getItem('token')
                 const response = await axios.get('http://localhost:8000/api/users', {
-                    headers: {
-                        Authorization: `Bearer ${authToken}`
-                    }
+                    withCredentials: true,
+                    // headers: {
+                    //     Authorization: `Bearer ${authToken}`
+                    // }
                 })
                 console.log('user data', response.data)
             } catch (error) {
