@@ -75,13 +75,13 @@ app.post('/api/login', async (req, res) => {
   //  สร้าง token
   // const token = jwt.sign({ email, role: 'admin' }, secret, {expiresIn: '1h'});
   //  ส่วน cookie
-  // res.cookie('token', token, {  
-  //   maxAge: 300000,
-  //   secure: true,
-  //   httpOnly: true,
-  //   sameSite: 'None'
+  res.cookie('token', token, {  
+    maxAge: 300000,
+    secure: true,
+    httpOnly: true,
+    sameSite: 'None'
   
-  // });
+  });
   
   req.session.userId = userData.id;
   req.session.user = userData;
@@ -99,7 +99,7 @@ app.post('/api/login', async (req, res) => {
 app.get('/api/users', async (req, res) => {
   try{
     // ส่วน cookie
-    // const authToken = req.cookies.token;
+    const authToken = req.cookies.token;
 
     // ส่วน token
     // const authHeader = req.headers['authorization'];
@@ -111,11 +111,12 @@ app.get('/api/users', async (req, res) => {
     // const user = jwt.verify(authToken, secret);
     // console.log('user', user)
 
-    if (!req.session.userId) {
-      throw {message: 'Auth fail'}
-    }
-    console.log('req.session', req.session)
-    console.log(req.sessionID)
+    //ส่วน session
+    // if (!req.session.userId) {
+    //   throw {message: 'Auth fail'}
+    // }
+    // console.log('req.session', req.session)
+    // console.log(req.sessionID)
 
     // const [checkResults] = await conn.query('SELECT * FROM users WHERE email = ?', [user.email]);
     // if (!checkResults[0]) {
